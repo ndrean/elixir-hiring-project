@@ -162,32 +162,47 @@ defmodule LiveviewCounterWeb.Counter do
 
   def render(assigns) do
     ~H"""
-    <div>
-      <h1>The count of on-line users is: <%= total_present(@counts) %></h1>
-      <button phx-click="dec">-</button>
-      <button phx-click="inc">+</button>
+    <div class="bg-gray-200 text-gray-800 p-6">
+      <h1 class="text-3xl font-bold mb-4">
+        The count of on-line users is: <%= total_present(@counts) %>
+      </h1>
 
-      <div>
-        Connected to <strong><%= @region || "?" %></strong>
+      <button
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        phx-click="dec"
+      >
+        -
+      </button>
+      <button
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+        phx-click="inc"
+      >
+        +
+      </button>
+      <div class="mt-4">
+        Connected to <strong class="font-bold"><%= @region || "?" %></strong>
       </div>
-      <table>
+      <table class="w-full mt-4 border-collapse border border-gray-500">
         <tr>
-          <th>Region</th>
-          <th>Users</th>
-          <th>Clicks</th>
+          <th class="border border-gray-500 p-2">Region</th>
+          <th class="border border-gray-500 p-2">Users</th>
+          <th class="border border-gray-500 p-2">Clicks</th>
         </tr>
         <%= if @counts !=0 do %>
           <tr :for={{k, v} <- @present}>
             <%= if v !=0  do %>
-              <th class="region"><%!-- <img src={"https://fly.io/ui/images/#{k}.svg"} /> --%>
-                <%= k %></th>
-              <td><%= v %></td>
-              <td><%= Map.get(@counts, to_string(k), 0) %></td>
+              <th class="region border border-gray-500 p-2">
+                <%!-- <img src={"https://fly.io/ui/images/#{k}.svg"} /> --%>
+                <%= k %>
+              </th>
+              <td class="border border-gray-500 p-2"><%= v %></td>
+              <td class="border border-gray-500 p-2"><%= Map.get(@counts, to_string(k), 0) %></td>
             <% end %>
           </tr>
         <% end %>
       </table>
     </div>
+
     <div>
       <p><% inspect(@present) %></p>
       <%!-- <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> --%>
