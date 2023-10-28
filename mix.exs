@@ -1,19 +1,15 @@
-defmodule LiveViewCounter.MixProject do
+defmodule LiveviewCounter.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :live_view_counter,
-      version: "0.14.1",
-      elixir: "~> 1.10",
+      app: :liveview_counter,
+      version: "0.1.0",
+      elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test, "coveralls.detail": :test,
-      "coveralls.json": :test, "coveralls.post": :test, "coveralls.html": :test]
+      deps: deps()
     ]
   end
 
@@ -22,7 +18,7 @@ defmodule LiveViewCounter.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {LiveViewCounter.Application, []},
+      mod: {LiveviewCounter.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -36,27 +32,37 @@ defmodule LiveViewCounter.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.5.7"},
-      {:phoenix_live_view, "~> 0.14.7"},
-      {:floki, ">= 0.27.0", only: :test},
-      {:phoenix_html, "~> 2.11"},
+      {:phoenix, "~> 1.7.7"},
+      {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.2"},
-      {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"},
-      {:gettext, "~> 0.11"},
-      {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.3", override: true},
-      {:libcluster, "~> 3.2.2"},
-
-      # Test Code Coverage:
-      {:excoveralls, "~> 0.12.2", only: :test}
+      {:phoenix_live_view, "~> 0.19.0"},
+      {:floki, ">= 0.30.0", only: :test},
+      {:phoenix_live_dashboard, "~> 0.8.0"},
+      {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
+      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_poller, "~> 1.0"},
+      {:gettext, "~> 0.20"},
+      {:jason, "~> 1.2"},
+      {:plug_cowboy, "~> 2.5"},
+      {:libcluster, "~> 3.3"},
+      {:ecto_sqlite3, "~> 0.12.0"},
+      {:ecto_sql, "~> 3.10"}
     ]
   end
 
+  # Aliases are shortcuts or tasks specific to the current project.
+  # For example, to install project dependencies and perform other setup tasks, run:
+  #
+  #     $ mix setup
+  #
+  # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"]
+      setup: ["deps.get", "assets.setup", "assets.build"],
+      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.build": ["tailwind default", "esbuild default"],
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
     ]
   end
 end
