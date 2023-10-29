@@ -48,7 +48,7 @@ defmodule LiveviewCounter.Count do
     make_change(count, -1)
   end
 
-  defp make_change(count, change) do
+  defp make_change(count, change) when is_integer(count) and is_integer(change) do
     new_count = count + change
     Counter.update(fly_region(), change)
     PubSub.broadcast(LiveviewCounter.PubSub, topic(), {:count, new_count, :region, fly_region()})

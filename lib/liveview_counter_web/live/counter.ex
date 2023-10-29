@@ -31,7 +31,7 @@ defmodule LiveviewCounterWeb.Counter do
     {present, init_counts, total} =
       case connected?(socket) do
         true -> init_state()
-        false -> {%{}, 0, 0}
+        false -> {%{}, %{}, 0}
       end
 
     {:ok,
@@ -45,13 +45,14 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   def fly_region do
+    # mandatory ENV VAR. Raise on mount if not present
     System.fetch_env!("FLY_REGION")
   end
 
   def get_flag(region) do
     case get_location_detail(region) do
       nil -> nil
-      detail -> Map.get(detail, :country, nil)
+      %{} = detail -> Map.get(detail, :country, nil)
     end
   end
 
@@ -84,21 +85,21 @@ defmodule LiveviewCounterWeb.Counter do
     {:reply, %{}, socket}
   end
 
-  def handle_info(
-        {:count, count, :region, region},
-        %{assigns: %{counts: counts}} = socket
-      ) do
+  # msg sent from the GenServer Counter
+  def handle_info({:count, count, :region, region}, socket) do
+    %{assigns: %{counts: counts}} = socket
     new_counts = Map.put(counts, region, count)
 
     {:noreply, assign(socket, counts: new_counts)}
   end
 
   def handle_info(
-        %{event: "presence_diff", payload: %{joins: joins, leaves: leaves}} = _msg,
-        %{assigns: %{present: present}} = socket
+        %{event: "presence_diff", payload: %{joins: joins, leaves: leaves}},
+        socket
       ) do
-    adds = presence_by_region(joins, socket.assigns.tracker_id)
-    subtracts = presence_by_region(leaves, socket.assigns.tracker_id)
+    %{assigns: %{present: present, tracker_id: tracker_id}} = socket
+    adds = presence_by_region(joins, tracker_id)
+    subtracts = presence_by_region(leaves, tracker_id)
 
     new_present =
       Map.merge(present, adds, fn _k, v1, v2 ->
@@ -136,7 +137,7 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   # produce a list of maps %{region => total_clicks} by querying the DB
-  def init_counts_by_region(present) do
+  def init_counts_by_region(present) when is_map(present) do
     displayed_locations = Map.keys(present)
 
     Enum.zip(
@@ -147,14 +148,12 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   # count total clicks of on-line users via the socket state
-  def total_present(counts) do
-    case counts do
-      0 -> 0
-      c -> Enum.sum(Map.values(c))
-    end
+  def total_present(counts) when is_map(counts) do
+    Map.values(counts) |> Enum.sum()
   end
 
-  def update_counts_on_leave(new_present, subtracts, counts) do
+  def update_counts_on_leave(new_present, subtracts, counts)
+      when is_map(subtracts) and is_map(new_present) do
     # find the region of the user who left
     key =
       case Map.keys(subtracts) |> length() do
@@ -173,12 +172,13 @@ defmodule LiveviewCounterWeb.Counter do
     end
   end
 
-  def clicks(counts, region) do
+  def clicks(counts, region) when is_map(counts) do
     Map.get(counts, to_string(region), 0)
   end
 
-  def show_city(region), do: Map.get(get_location_detail(region), :city)
-  def show_flag(region), do: Map.get(get_location_detail(region), :country)
+  def show_city(region), do: Map.get(get_location_detail(region), :city, "unknown")
+
+  def show_flag(region), do: Map.get(get_location_detail(region), :country, "unknwow")
 
   def render(assigns) do
     ~H"""
@@ -226,7 +226,7 @@ defmodule LiveviewCounterWeb.Counter do
 
     <div>
       <%!-- <p><% inspect(@present) %></p> --%>
-      <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
+      <%!-- <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> --%>
     </div>
     """
   end
