@@ -7,7 +7,7 @@ import Config
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
 
-port = System.get_env("PORT") || 4001
+port = System.get_env("PORT") || 4000
 
 config :liveview_counter, LiveviewCounterWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.

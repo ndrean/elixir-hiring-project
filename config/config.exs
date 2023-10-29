@@ -13,9 +13,12 @@ config :liveview_counter,
 config :liveview_counter, Counter.Repo,
   # database: "liveview_counter_repo",
   database: Path.expand("../liveview_counter_dev.db", Path.dirname(__ENV__.file)),
-  username: "user",
-  password: "pass",
-  hostname: "localhost"
+  pool_size: 5,
+  show_sensitive_data_on_connection_error: true
+
+# username: "user",
+# password: "pass",
+# hostname: "localhost"
 
 # Configures the endpoint
 config :liveview_counter, LiveviewCounterWeb.Endpoint,
