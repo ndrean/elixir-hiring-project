@@ -4,12 +4,14 @@ defmodule LiveviewCounterWeb.Counter do
   alias LiveviewCounter.Count
   alias Phoenix.PubSub
   alias LiveviewCounter.Presence
+  alias LiveviewCounter.Flags
 
   @topic Count.topic()
   @init "init"
   @presence_topic "presence"
 
   def mount(_params, _session, socket) do
+    get_connect_info(socket, :peer_data) |> dbg()
     :ok = PubSub.subscribe(LiveviewCounter.PubSub, @topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@presence_topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@init)
@@ -42,7 +44,19 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   def fly_region do
-    System.get_env("FLY_REGION", "unknown")
+    System.fetch_env!("FLY_REGION")
+  end
+
+  def get_flag(region) do
+    case get_location_detail(region) do
+      nil -> nil
+      detail -> Map.get(detail, :country, nil)
+    end
+  end
+
+  def get_location_detail(region) do
+    Flags.assign()
+    |> Enum.find(&(&1.short == region))
   end
 
   def init_state do
@@ -83,7 +97,7 @@ defmodule LiveviewCounterWeb.Counter do
         %{assigns: %{present: present}} = socket
       ) do
     adds = presence_by_region(joins, socket.assigns.tracker_id)
-    subtracts = presence_by_region(leaves, socket.assigns.tracker_id) |> dbg()
+    subtracts = presence_by_region(leaves, socket.assigns.tracker_id)
 
     new_present =
       Map.merge(present, adds, fn _k, v1, v2 ->
@@ -140,12 +154,14 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   def update_counts_on_leave(new_present, subtracts, counts) do
+    # find the region of the user who left
     key =
       case Map.keys(subtracts) |> length() do
         0 -> ""
         1 -> Map.keys(subtracts) |> hd()
       end
 
+    # remove from the map "counts" the data of the region if there is no more user in this region
     case Map.get(new_present, key) do
       0 ->
         {_, counts} = Map.pop(counts, key)
@@ -159,6 +175,9 @@ defmodule LiveviewCounterWeb.Counter do
   def clicks(counts, region) do
     Map.get(counts, to_string(region), 0)
   end
+
+  def show_city(region), do: Map.get(get_location_detail(region), :city)
+  def show_flag(region), do: Map.get(get_location_detail(region), :country)
 
   def render(assigns) do
     ~H"""
@@ -180,7 +199,8 @@ defmodule LiveviewCounterWeb.Counter do
         +
       </button>
       <div class="mt-4">
-        Connected to <strong class="font-bold"><%= @region || "?" %></strong>
+        Connected to Fly.io region "<strong class="font-bold"><%= @region || "unknown" %></strong>"",
+        &nbsp <%= show_city(@region) %> &nbsp <%= show_flag(@region) %>
       </div>
       <table class="w-full mt-4 border-collapse border border-gray-500">
         <tr>
@@ -191,9 +211,9 @@ defmodule LiveviewCounterWeb.Counter do
         <%= if @counts !=0 do %>
           <tr :for={{k, v} <- @present}>
             <%= if v !=0  do %>
-              <th class="region border border-gray-500 p-2">
+              <th class="region border border-gray-500 p-2 text-3xl">
                 <%!-- <img src={"https://fly.io/ui/images/#{k}.svg"} /> --%>
-                <%= k %>
+                <%= get_flag(k) %> &nbsp <%= k %>
               </th>
               <td class="border border-gray-500 p-2"><%= v %></td>
               <td class="border border-gray-500 p-2"><%= Map.get(@counts, to_string(k), 0) %></td>

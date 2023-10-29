@@ -8,6 +8,7 @@ defmodule LiveviewCounterWeb.Router do
     plug :put_root_layout, html: {LiveviewCounterWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    # plug :get_forwarded_for
   end
 
   pipeline :api do
@@ -36,4 +37,26 @@ defmodule LiveviewCounterWeb.Router do
       live_dashboard "/dashboard", metrics: LiveviewCounterWeb.Telemetry
     end
   end
+
+  # def get_forwarded_for(conn, _) do
+  #   forwarded_for =
+  #     conn
+  #     |> Plug.Conn.get_req_header("x-forwarded-for")
+  #     |> List.first()
+
+  #   result =
+  #     if forwarded_for do
+  #       forwarded_for
+  #       |> String.split(",")
+  #       |> Enum.map(&String.trim/1)
+  #       |> List.first()
+  #     else
+  #       conn.remote_ip
+  #       |> :inet_parse.ntoa()
+  #       |> to_string()
+  #     end
+
+  #   conn
+  #   |> Plug.Conn.put_session(:forwarded, result)
+  # end
 end
