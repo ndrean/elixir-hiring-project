@@ -48,6 +48,21 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  config :liveview_counter, dns_cluster_query: System.get_env("DNS_CLUSTER_QUERY")
+
+  if config_env() == :prod do
+    database_path =
+      System.get_env("DATABASE_PATH") ||
+        raise """
+        environment variable DATABASE_PATH is missing.
+        For example: /data/name/name.db
+        """
+
+    config :name, Counter.Repo,
+      database: database_path,
+      pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5")
+  end
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key

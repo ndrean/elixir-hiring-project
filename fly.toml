@@ -17,6 +17,7 @@ release_command = "/app/bin/migrate"
 DATABASE_PATH = "/data/mydata/liveview_counter_prod.db"
 PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
+DNS_CLUSTER_QUERY = "distributed-counters.internal"
 
 [mounts]
 source = "mydata"

@@ -7,14 +7,15 @@ defmodule LiveviewCounter.Application do
   def start(_type, _args) do
     LiveviewCounter.Release.migrate()
 
-    topologies = [
-      epdm: [
-        strategy: Cluster.Strategy.LocalEpmd
-      ]
-    ]
+    # topologies = [
+    #   epdm: [
+    #     strategy: Cluster.Strategy.LocalEpmd
+    #   ]
+    # ]
 
     children = [
-      {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},
+      # {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},
+      {DNSCluster, query: Application.get_env(:my_app, :dns_cluster_query) || :ignore},
       Counter.Repo,
       LiveviewCounterWeb.Telemetry,
       LiveviewCounterWeb.Endpoint,
