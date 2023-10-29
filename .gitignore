@@ -38,3 +38,4 @@ npm-debug.log
 
 liveview_counter_dev*.*
 liveview_counter_repo*.*
+*.db
