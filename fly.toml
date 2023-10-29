@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for distributed-counters on 2023-10-29T16:29:30+01:00
+# fly.toml app configuration file generated for distributed-counters on 2023-10-29T18:44:19+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -15,7 +15,6 @@ release_command = "/app/bin/migrate"
 
 [env]
 DATABASE_PATH = "/liveview_counter_prod.db"
-# DATABASE_PATH = "/data/mydata/liveview_counter_prod.db"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
@@ -24,8 +23,6 @@ RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 [mounts]
 source = "litefs"
 destination = "/var/lib/litefs"
-# source = "mydata"
-# destination = "/data/mydata"
 
 [http_service]
 internal_port = 8080
