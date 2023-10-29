@@ -11,7 +11,8 @@ config :liveview_counter,
   ecto_repos: [Counter.Repo]
 
 config :liveview_counter, Counter.Repo,
-  database: "liveview_counter_repo",
+  # database: "liveview_counter_repo",
+  database: Path.expand("../liveview_counter_dev.db", Path.dirname(__ENV__.file)),
   username: "user",
   password: "pass",
   hostname: "localhost"

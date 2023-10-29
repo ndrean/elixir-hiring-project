@@ -87,7 +87,7 @@ defmodule LiveviewCounterWeb.Counter do
         {:count, count, :region, region},
         %{assigns: %{counts: counts}} = socket
       ) do
-    new_counts = Map.put(counts, region, count) |> dbg()
+    new_counts = Map.put(counts, region, count)
 
     {:noreply, assign(socket, counts: new_counts)}
   end
