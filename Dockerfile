@@ -94,6 +94,6 @@ USER nobody
 ENV ECTO_IPV6 true
 ENV ERL_AFLAGS "-proto_dist inet6_tcp"
 
-ENTRYPOINT litefs mount
+# ENTRYPOINT litefs mount
 
 CMD ["/app/bin/server"]

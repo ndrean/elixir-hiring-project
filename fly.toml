@@ -14,14 +14,18 @@ swap_size_mb = 512
 release_command = "/app/bin/migrate"
 
 [env]
-DATABASE_PATH = "/var/lib/litefs/liveview_counter_prod.db"
+# DATABASE_PATH = "/var/lib/litefs/liveview_counter_prod.db"
+DATABASE_PATH = "/data/mydata/liveview_counter_prod.db"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
 
 [mounts]
-source = "litefs"
-destination = "/var/lib/litefs"
+# source = "litefs"
+# destination = "/var/lib/litefs"
+source = "mydata"
+destination = "/data"
+
 
 [http_service]
 internal_port = 8080
