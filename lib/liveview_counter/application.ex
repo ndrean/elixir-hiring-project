@@ -17,7 +17,7 @@ defmodule LiveviewCounter.Application do
       # {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},
       Counter.Repo,
       LiveviewCounterWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:my_app, :dns_cluster_query) || :ignore},
+      {DNSCluster, query: Application.get_env(:liveview_counter, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: LiveviewCounter.PubSub},
       LiveviewCounterWeb.Endpoint,
       LiveviewCounter.Count,
