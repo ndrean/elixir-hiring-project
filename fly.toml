@@ -11,7 +11,7 @@ swap_size_mb = 512
 [build]
 
 [deploy]
-# release_command = "/app/bin/migrate"
+release_command = "/app/bin/migrate"
 
 [env]
 DATABASE_PATH = "/liveview_counter_prod.db"
@@ -21,7 +21,7 @@ PORT = "8080"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 PRIMARY_REGION = "cdg"
 
-[[mounts]]
+[mounts]
 source = "litefs"
 destination = "/var/lib/litefs"
 
