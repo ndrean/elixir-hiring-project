@@ -21,7 +21,7 @@ PORT = "8080"
 PRIMARY_REGION = "cdg"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 
-[[mounts]]
+[mounts]
 source = "mydata"
 destination = "/data"
 
