@@ -68,7 +68,7 @@ RUN mix release
 FROM ${RUNNER_IMAGE}
 
 RUN apt-get update -y && \
-  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates fuse3 sqlite3 \
+  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates fuse3  \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
@@ -89,11 +89,11 @@ COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
 
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/liveview_counter ./
 
-USER nobody
+# USER nobody
 
 ENV ECTO_IPV6 true
 ENV ERL_AFLAGS "-proto_dist inet6_tcp"
 
-# ENTRYPOINT litefs mount
+ENTRYPOINT litefs mount
 
-CMD ["/app/bin/server"]
+# CMD ["/app/bin/server"]
