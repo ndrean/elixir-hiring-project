@@ -21,7 +21,7 @@ exit-on-error: false
 # for applications that use a single SQLite database.
 proxy:
   addr: ":8080"
-  target: "localhost:4000"
+  target: "distributed-counters:8080"
   db: "db"
   passthrough: 
     - "*.ico"
