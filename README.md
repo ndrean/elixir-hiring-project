@@ -1,6 +1,34 @@
 # Fly.io Elixir Hiring Project
 
-Hello! This is a hiring project for our [Elixir dev advocate](https://fly.io/blog/we-are-hiring-elixir-developer-advocates/) position. If you apply, we'll ask you to do this project so we can assess your ability to work with Elixir/Phoenix/LiveView. This is a pretty good representation of the type of work we need to do at Fly.io. 
+# General
+
+Generated a new project since the "official" one used webpack.
+
+Project achieved in 7h.
+
+Usage:
+
+```bash
+PORT=4000 FLY_REGION=ord iex --sname "a" --cookie secret -S mix phx.server
+PORT=4001 FLY_REGION=cdg iex --sname "b" --cookie secret -S mix phx.server
+...
+```
+
+## Additions - changes
+
+`Libcluster` with "localEPDM" to cluster the nodes.
+
+An SQLITE DB for persistence with a unique table COUNTER, with two records: `region`, `count`.
+
+Every change of the GenServer state is saved in the database.
+
+On mount, the socket state is populated by reading the DB and broadcasted to update users view.
+
+On leave, the state is updated
+
+## Original Fly Readme
+
+Hello! This is a hiring project for our [Elixir dev advocate](https://fly.io/blog/we-are-hiring-elixir-developer-advocates/) position. If you apply, we'll ask you to do this project so we can assess your ability to work with Elixir/Phoenix/LiveView. This is a pretty good representation of the type of work we need to do at Fly.io.
 
 ## The purpose
 
@@ -32,7 +60,7 @@ We expect this to take about two hours for experience Elixir/Phoenix devs, but y
 2. Create a branch for your changes
 3. Do some development
 4. When you're ready, create a patchset to submit
-   * `git diff main <your-branch> > fly-work-sample.patch.txt`
+   - `git diff main <your-branch> > fly-work-sample.patch.txt`
 5. Email the patch to jobs+elixir@fly.io (or reply to your existing email chain)
 
 ## Evaluation process
@@ -41,14 +69,14 @@ Once we receive your patch, we will anonymize it and have three Fly.io engineers
 
 ## What we care about
 
-We have two specific things we're looking for: 
+We have two specific things we're looking for:
 
-* Does it show clicks/presence from every region at first load?
-* Is clustering in dev mode configured?
+- Does it show clicks/presence from every region at first load?
+- Is clustering in dev mode configured?
 
 Don't waste time on:
 
-* Deploying the app, running it locally is just fine
-* Updating the README or writing docs
-* Writing tests
-* Design / refactoring / other cleanup
+- Deploying the app, running it locally is just fine
+- Updating the README or writing docs
+- Writing tests
+- Design / refactoring / other cleanup

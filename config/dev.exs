@@ -1,24 +1,25 @@
-use Mix.Config
+import Config
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
 # The watchers configuration can be used to run external
-# watchers to your application. For example, we use it
-# with webpack to recompile .js and .css sources.
-config :live_view_counter, LiveViewCounterWeb.Endpoint,
-  http: [port: 4000],
-  debug_errors: true,
-  code_reloader: true,
+# watchers to your application. For example, we can use it
+# to bundle .js and .css sources.
+
+port = System.get_env("PORT") || 4001
+
+config :liveview_counter, LiveviewCounterWeb.Endpoint,
+  # Binding to loopback ipv4 address prevents access from other machines.
+  # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
+  http: [ip: {127, 0, 0, 1}, port: port],
   check_origin: false,
+  code_reloader: true,
+  debug_errors: true,
+  secret_key_base: "fmpEVqKH/6uxwgqVT8yRaZ2uBOg+6F/4dM8FyStb2W/sMusq97GvDDCaS3CexBpj",
   watchers: [
-    node: [
-      "node_modules/webpack/bin/webpack.js",
-      "--mode",
-      "development",
-      "--watch-stdin",
-      cd: Path.expand("../assets", __DIR__)
-    ]
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -29,7 +30,6 @@ config :live_view_counter, LiveViewCounterWeb.Endpoint,
 #
 #     mix phx.gen.cert
 #
-# Note that this task requires Erlang/OTP 20 or later.
 # Run `mix help phx.gen.cert` for more information.
 #
 # The `http:` config above can be replaced with:
@@ -46,15 +46,17 @@ config :live_view_counter, LiveViewCounterWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :live_view_counter, LiveViewCounterWeb.Endpoint,
+config :liveview_counter, LiveviewCounterWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/live_view_counter_web/(live|views)/.*(ex)$",
-      ~r"lib/live_view_counter_web/templates/.*(eex)$"
+      ~r"lib/liveview_counter_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
+
+# Enable dev routes for dashboard and mailbox
+config :liveview_counter, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
