@@ -5,6 +5,8 @@ defmodule LiveviewCounter.Application do
 
   @impl true
   def start(_type, _args) do
+    LiveviewCounter.Release.migrate()
+
     topologies = [
       epdm: [
         strategy: Cluster.Strategy.LocalEpmd

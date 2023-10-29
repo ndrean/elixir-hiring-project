@@ -11,7 +11,7 @@ defmodule LiveviewCounterWeb.Counter do
   @presence_topic "presence"
 
   def mount(_params, _session, socket) do
-    get_connect_info(socket, :peer_data) |> dbg()
+    # get_connect_info(socket, :peer_data) |> dbg()
     :ok = PubSub.subscribe(LiveviewCounter.PubSub, @topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@presence_topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@init)
@@ -224,8 +224,8 @@ defmodule LiveviewCounterWeb.Counter do
     </div>
 
     <div>
-      <p><% inspect(@present) %></p>
-      <%!-- <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> --%>
+      <%!-- <p><% inspect(@present) %></p> --%>
+      <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
     </div>
     """
   end
