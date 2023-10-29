@@ -3,12 +3,15 @@
 # storage on disk. It intercepts disk writes to determine transaction boundaries
 # so that those transactions can be saved and shipped to replicas.
 fuse:
-  dir: "/data"
+  # This is the mount directory that applications will
+  # use to access their SQLite databases.
+  dir: "/mydata"
 
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
 # However, this data should not be accessed directly by the user application.
 data:
+  # path to internal data storage
   dir: "/data/mydata"
 
 # This flag ensure that LiteFS continues to run if there is an issue on starup.
@@ -20,8 +23,11 @@ exit-on-error: false
 # This proxy can handle primary forwarding & replica consistency
 # for applications that use a single SQLite database.
 proxy:
+  # matches the internal_port in fly.toml
   addr: ":8080"
+  # from Dockerfile???
   target: "localhost:8081"
+  #  SQLite database filename
   db: "liveview_counter_prod.db"
   passthrough: 
     - "*.ico"

@@ -21,12 +21,12 @@ PORT = "8080"
 PRIMARY_REGION = "cdg"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 
-[mounts]
+[[mounts]]
 source = "mydata"
 destination = "/data"
 
 [http_service]
-internal_port = 8080
+internal_port = "8080"
 force_https = true
 auto_stop_machines = true
 auto_start_machines = true
