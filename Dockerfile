@@ -97,4 +97,4 @@ ENV ERL_AFLAGS "-proto_dist inet6_tcp"
 
 ENTRYPOINT litefs mount
 
-CMD ["/app/bin/server"]
+# CMD ["/app/bin/server"]

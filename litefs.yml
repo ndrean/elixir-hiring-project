@@ -21,7 +21,7 @@ exit-on-error: false
 # for applications that use a single SQLite database.
 proxy:
   addr: ":8080"
-  target: "localhost:4000"
+  target: "localhost:8081"
   db: "liveview_counter_prod.db"
   passthrough: 
     - "*.ico"
@@ -32,8 +32,8 @@ proxy:
 # and sync'd with the cluster. You can run multiple commands but LiteFS expects
 # the last command to be long-running (e.g. an application server). When the
 # last command exits, LiteFS is shut down.
-# exec:
-  # - cmd: "/app/bin/server -addr :4000 -dsn /litefs/db"
+exec:
+  - cmd: "/app/bin/server -addr :8081 -dsn /litefs/db"
 
 # The lease section specifies how the cluster will be managed. We're using the
 # "consul" lease type so that our application can dynamically change the primary.
