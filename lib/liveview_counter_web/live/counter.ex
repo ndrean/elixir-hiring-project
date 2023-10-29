@@ -181,7 +181,7 @@ defmodule LiveviewCounterWeb.Counter do
 
   def render(assigns) do
     ~H"""
-    <div class="bg-gray-200 text-gray-800 p-6">
+    <div class=" text-gray-800 p-6">
       <h1 class="text-3xl font-bold mb-4">
         The count of on-line users is: <%= total_present(@counts) %>
       </h1>
