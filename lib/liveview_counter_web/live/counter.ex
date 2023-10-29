@@ -11,13 +11,7 @@ defmodule LiveviewCounterWeb.Counter do
   @presence_topic "presence"
 
   def mount(_params, _session, socket) do
-    ip = Map.get(get_connect_info(socket, :peer_data), :address, nil)
-
-    ip =
-      case ip do
-        nil -> nil
-        {a, b, c, d} -> "#{a}.#{b}.#{c}.#{d}"
-      end
+    # ip = Map.get(get_connect_info(socket, :peer_data), :address, nil)
 
     :ok = PubSub.subscribe(LiveviewCounter.PubSub, @topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@presence_topic)
@@ -46,8 +40,7 @@ defmodule LiveviewCounterWeb.Counter do
        counts: init_counts,
        present: present,
        region: fly_region(),
-       tracker_id: tracker_id,
-       ip: ip
+       tracker_id: tracker_id
      )}
   end
 
@@ -208,7 +201,7 @@ defmodule LiveviewCounterWeb.Counter do
       </button>
       <div class="mt-4">
         Connected to Fly.io region "<strong class="font-bold"><%= @region || "unknown" %></strong>"",
-        &nbsp <%= show_city(@region) %> &nbsp <%= show_flag(@region) %>, &nbsp @<%= @ip %>
+        &nbsp <%= show_city(@region) %> &nbsp <%= show_flag(@region) %>
       </div>
       <table class="w-full mt-4 border-collapse border border-gray-500">
         <tr>
