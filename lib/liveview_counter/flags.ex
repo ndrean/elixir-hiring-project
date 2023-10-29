@@ -11,7 +11,6 @@ defmodule LiveviewCounter.Flags do
     "MX" => "🇲🇽",
     "US" => "🇺🇸",
     "SE" => "🇸🇪",
-    "COL" => "🇨🇴",
     "CA" => " 🇨🇦",
     "ES" => "🇪🇸",
     "BR" => "🇧🇷",
@@ -64,8 +63,5 @@ defmodule LiveviewCounter.Flags do
   def assign do
     @centers
     |> Enum.map(fn location -> %{location | country: @flags[location.country]} end)
-
-    # @centers
-    # |> Enum.map(fn {ci, co, sh} -> {ci, Enum.find(@flags, fn flag -> flag[co] end), sh} end)
   end
 end

@@ -36,3 +36,5 @@ npm-debug.log
 /assets/node_modules/
 /assets/vendor/
 
+liveview_counter_dev*.*
+liveview_counter_repo*.*
