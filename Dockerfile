@@ -68,7 +68,7 @@ RUN mix release
 FROM ${RUNNER_IMAGE}
 
 RUN apt-get update -y && \
-  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
+  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates fuse3 sqlite3 \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
@@ -85,6 +85,8 @@ RUN chown nobody /app
 ENV MIX_ENV="prod"
 
 # Only copy the final release from the build stage
+COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
+
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/liveview_counter ./
 
 USER nobody
@@ -96,5 +98,6 @@ ENV ERL_AFLAGS "-proto_dist inet6_tcp"
 # advised to add an init process such as tini via `apt-get install`
 # above and adding an entrypoint. See https://github.com/krallin/tini for details
 # ENTRYPOINT ["/tini", "--"]
+ENTRYPOINT litefs mount
 
 CMD ["/app/bin/server"]

@@ -22,6 +22,8 @@ DNS_CLUSTER_QUERY = "distributed-counters.internal"
 [mounts]
 source = "mydata"
 destination = "/data"
+source = "litefs"
+destination = "/var/lib/litefs"
 
 [http_service]
 internal_port = 8080
