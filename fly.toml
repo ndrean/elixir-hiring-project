@@ -17,7 +17,7 @@ swap_size_mb = 512
 DATABASE_PATH = "/data/mydata/liveview_counter_prod.db"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 PHX_HOST = "distributed-counters.fly.dev"
-PORT = "4000"
+PORT = "8080"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 
 [mounts]
