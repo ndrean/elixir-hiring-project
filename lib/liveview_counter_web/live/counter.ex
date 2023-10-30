@@ -211,7 +211,7 @@ defmodule LiveviewCounterWeb.Counter do
 
     <div>
       <%!-- <p><% inspect(@present) %></p> --%>
-      <%!-- <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> --%>
+      <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
     </div>
     """
   end
