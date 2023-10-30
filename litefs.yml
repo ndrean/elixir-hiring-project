@@ -25,7 +25,7 @@ exit-on-error: true
 proxy:
   # matches the internal_port in fly.toml
   addr: ":8080"
-  target: "localhost:8081"
+  target: "localhost:4000"
   #  SQLite database filename
   db: "liveview_counter_prod.db"
   passthrough: 
@@ -38,7 +38,7 @@ proxy:
 # the last command to be long-running (e.g. an application server). When the
 # last command exits, LiteFS is shut down.
 exec:
-  - cmd: "/app/bin/server -addr :8081 -dsn /data/mydata"
+  - cmd: "/app/bin/server -addr :4000 -dsn /data/mydata"
 
 # The lease section specifies how the cluster will be managed. We're using the
 # "consul" lease type so that our application can dynamically change the primary.
