@@ -10,8 +10,9 @@ fuse:
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
 # However, this data should not be accessed directly by the user application.
+# # You must place this directory on a persistent volume.
 data:
-  # path to internal data storage
+  # path to internal data storage, placed on a persistent volume => fly volumes create litefs
   dir: "/data/litefs"
 
 # This flag ensure that LiteFS continues to run if there is an issue on starup.
@@ -53,4 +54,4 @@ lease:
 
   consul:
     url: "${FLY_CONSUL_URL}"
-    key: "litefs/${FLY_APP_NAME}"
+    key: "litefs/${FLY_APP_NAME}-v2"
