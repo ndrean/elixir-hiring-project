@@ -25,3 +25,17 @@ Every change of the GenServer state is saved in the database.
 On mount, the socket state is populated by reading the DB and broadcasted to update users view.
 
 On leave, the state is updated
+
+## Fly.io
+
+```bash
+> fly ssh console -s -C df
+Connecting to fdaa:0:57e6:a7b:aebf:700a:d1cb:2... complete
+Filesystem     1K-blocks   Used Available Use% Mounted on
+devtmpfs           98380      0     98380   0% /dev
+/dev/vda         8154588 681300   7037476   9% /
+shm               111340      0    111340   0% /dev/shm
+tmpfs             111340      0    111340   0% /sys/fs/cgroup
+/dev/vdb         1009132     40    940484   1% /data
+litefs           1009132     40    940484   1% /data/mydat
+```
