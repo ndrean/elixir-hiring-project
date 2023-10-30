@@ -26,7 +26,7 @@ proxy:
   # matches the internal_port in fly.toml
   addr: ":8080"
   # Phoenix is listening on port 4000, set in fly.toml under PORT
-  target: "localhost:4000"
+  target: "localhost:${PORT}"
   #  SQLite database filename
   db: "liveview_counter_prod.db"
   passthrough: 
@@ -39,7 +39,8 @@ proxy:
 # the last command to be long-running (e.g. an application server). When the
 # last command exits, LiteFS is shut down.
 exec:
-  - cmd: "/app/bin/server -addr :4000 -dsn /data/mydata"
+  - cmd: "/app/bin/server -addr :${PORT}"
+  # " -dsn /data/mydata"
 
 # The lease section specifies how the cluster will be managed. We're using the
 # "consul" lease type so that our application can dynamically change the primary.
@@ -53,4 +54,4 @@ lease:
 
   consul:
     url: "${FLY_CONSUL_URL}"
-    key: "litefs/${FLY_APP_NAME}-v2"
+    key: "litefs/${FLY_APP_NAME}"
