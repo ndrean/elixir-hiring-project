@@ -90,7 +90,7 @@ if config_env() == :prod do
   # We also recommend setting `force_ssl` in your endpoint, ensuring
   # no data is ever sent via http, always redirecting to https:
   #
-  config :liveview_counter, LiveviewCounterWeb.Endpoint, force_ssl: [hsts: true]
+  # config :liveview_counter, LiveviewCounterWeb.Endpoint, force_ssl: [hsts: true]
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
 end
