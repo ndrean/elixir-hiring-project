@@ -7,8 +7,6 @@
 # General application configuration
 import Config
 
-config :liveview_counter, dns_cluster_query: System.get_env("DNS_CLUSTER_QUERY")
-
 config :liveview_counter,
   ecto_repos: [Counter.Repo]
 
