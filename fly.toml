@@ -18,11 +18,12 @@ DATABASE_PATH = "/data/mydata/liveview_counter_prod.db"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
-# PRIMARY_REGION = "cdg"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 
 [mounts]
+# volume name
 source = "mydata"
+# the directory where the source volume should be mounted on the app
 destination = "/data"
 
 [http_service]
