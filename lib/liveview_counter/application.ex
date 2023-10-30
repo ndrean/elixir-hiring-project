@@ -5,6 +5,9 @@ defmodule LiveviewCounter.Application do
 
   @impl true
   def start(_type, _args) do
+    require Logger
+    Logger.info(Application.get_env(:liveview_counter, :dns_cluster_query))
+
     LiveviewCounter.Release.migrate()
 
     # topologies = [
