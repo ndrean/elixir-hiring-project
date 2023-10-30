@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for distributed-counters on 2023-10-29T21:40:17+01:00
+# fly.toml app configuration file generated for distributed-counters on 2023-10-30T10:57:38+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -11,11 +11,9 @@ swap_size_mb = 512
 [build]
 
 # [deploy]
-# release_command = "/app/bin/migrate"
+#   release_command = "/app/bin/migrate"
 
 [env]
-#  the [mounts] configuration source is the name of the volume AND the name of a directory. 
-#  The directory will be mounted under the destination path.
 DATABASE_PATH = "/data/mydata/liveview_counter_prod.db"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 PHX_HOST = "distributed-counters.fly.dev"
@@ -23,9 +21,7 @@ PORT = "8080"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 
 [mounts]
-# volume name
 source = "mydata"
-# the directory where the source volume should be mounted on the app
 destination = "/data"
 
 [http_service]
