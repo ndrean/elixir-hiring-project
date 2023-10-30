@@ -28,10 +28,10 @@ defmodule LiveviewCounterWeb.Counter do
 
     # avoid unnecessary DB calls by doing this once the WS mounted,
     # hence a guard is needed in the template (if @counts...)
-    {present, init_counts, total} =
+    {present, init_counts, total, nb_online} =
       case connected?(socket) do
         true -> init_state()
-        false -> {%{}, %{}, 0}
+        false -> {%{}, %{}, 0, 0}
       end
 
     {:ok,
@@ -41,7 +41,8 @@ defmodule LiveviewCounterWeb.Counter do
        counts: init_counts,
        present: present,
        region: fly_region(),
-       tracker_id: tracker_id
+       tracker_id: tracker_id,
+       nb_online: nb_online
      )}
   end
 
@@ -57,7 +58,7 @@ defmodule LiveviewCounterWeb.Counter do
     init_tot = Counter.total_count()
     # signal to other users
     :ok = PubSub.broadcast(LiveviewCounter.PubSub, @init, init_c)
-    {present, init_c, init_tot}
+    {present, init_c, init_tot, 0}
   end
 
   def handle_event("inc", _, %{assigns: %{counts: counts}} = socket) do
@@ -100,9 +101,10 @@ defmodule LiveviewCounterWeb.Counter do
         v1 - v2
       end)
 
+    nb_online = online_users(new_present)
     counts = update_counts_on_leave(new_present, subtracts, socket.assigns.counts)
 
-    {:noreply, assign(socket, present: new_present, counts: counts)}
+    {:noreply, assign(socket, present: new_present, counts: counts, nb_online: nb_online)}
   end
 
   # whenever a user mounts, he broadcasts new counts to update the view.
@@ -136,8 +138,12 @@ defmodule LiveviewCounterWeb.Counter do
     |> Enum.into(%{})
   end
 
+  def online_users(present) when is_map(present) do
+    Map.values(present) |> Enum.sum()
+  end
+
   # count total clicks of on-line users via the socket state
-  def total_present(counts) when is_map(counts) do
+  def total_clicks(counts) when is_map(counts) do
     Map.values(counts) |> Enum.sum()
   end
 
@@ -161,7 +167,7 @@ defmodule LiveviewCounterWeb.Counter do
     end
   end
 
-  def clicks(counts, region) when is_map(counts) do
+  def total_clicks_region(counts, region) when is_map(counts) do
     Map.get(counts, to_string(region), 0)
   end
 
@@ -169,9 +175,11 @@ defmodule LiveviewCounterWeb.Counter do
     ~H"""
     <div class=" text-gray-800 p-6">
       <h1 class="text-3xl font-bold mb-4">
-        The count of on-line users is: <%= total_present(@counts) %>
+        Total clicks: <%= total_clicks(@counts) %>
       </h1>
-
+      <h2 class="mb-4">Online users: <strong><%= @nb_online %></strong></h2>
+      <hr />
+      <br />
       <button
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         phx-click="dec"
@@ -202,17 +210,14 @@ defmodule LiveviewCounterWeb.Counter do
                 <%= Flags.get_flag(k) %> &nbsp <%= k %>
               </th>
               <td class="border border-gray-500 p-2"><%= v %></td>
-              <td class="border border-gray-500 p-2"><%= Map.get(@counts, to_string(k), 0) %></td>
+              <td class="border border-gray-500 p-2"><%= total_clicks_region(@counts, k) %></td>
             <% end %>
           </tr>
         <% end %>
       </table>
     </div>
-
-    <div>
-      <%!-- <p><% inspect(@present) %></p> --%>
-      <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
-    </div>
+    <br />
+    <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
     """
   end
 end

@@ -5,9 +5,6 @@ defmodule LiveviewCounter.Application do
 
   @impl true
   def start(_type, _args) do
-    # require Logger
-    # Logger.info(Application.get_env(:liveview_counter, :dns_cluster_query))
-
     LiveviewCounter.Release.migrate()
 
     # topologies = [
@@ -20,8 +17,7 @@ defmodule LiveviewCounter.Application do
       # {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},
       Counter.Repo,
       LiveviewCounterWeb.Telemetry,
-      # {DNSCluster, query: Application.get_env(:liveview_counter, :dns_cluster_query) || :ignore},
-      {DNSCluster, query: System.get_env("DNS_CLUSTER_QUERY") || :ignore},
+      # {DNSCluster, query: System.get_env("DNS_CLUSTER_QUERY") || :ignore},
       {Phoenix.PubSub, name: LiveviewCounter.PubSub},
       LiveviewCounterWeb.Endpoint,
       LiveviewCounter.Count,
