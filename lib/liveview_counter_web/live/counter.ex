@@ -35,7 +35,8 @@ defmodule LiveviewCounterWeb.Counter do
       end
 
     {:ok,
-     assign(socket,
+     socket
+     |> assign(
        total: total,
        counts: init_counts,
        present: present,
@@ -47,18 +48,6 @@ defmodule LiveviewCounterWeb.Counter do
   def fly_region do
     # mandatory ENV VAR. Raise on mount if not present
     System.fetch_env!("FLY_REGION")
-  end
-
-  def get_flag(region) do
-    case get_location_detail(region) do
-      nil -> nil
-      %{} = detail -> Map.get(detail, :country, nil)
-    end
-  end
-
-  def get_location_detail(region) do
-    Flags.assign()
-    |> Enum.find(&(&1.short == region))
   end
 
   def init_state do
@@ -176,10 +165,6 @@ defmodule LiveviewCounterWeb.Counter do
     Map.get(counts, to_string(region), 0)
   end
 
-  def show_city(region), do: Map.get(get_location_detail(region), :city, "unknown")
-
-  def show_flag(region), do: Map.get(get_location_detail(region), :country, "unknwow")
-
   def render(assigns) do
     ~H"""
     <div class=" text-gray-800 p-6">
@@ -201,7 +186,7 @@ defmodule LiveviewCounterWeb.Counter do
       </button>
       <div class="mt-4">
         Connected to Fly.io region "<strong class="font-bold"><%= @region || "unknown" %></strong>"",
-        &nbsp <%= show_city(@region) %> &nbsp <%= show_flag(@region) %>
+        &nbsp <%= Flags.show_city(@region) %> &nbsp <%= Flags.show_flag(@region) %>
       </div>
       <table class="w-full mt-4 border-collapse border border-gray-500">
         <tr>
@@ -214,7 +199,7 @@ defmodule LiveviewCounterWeb.Counter do
             <%= if v !=0  do %>
               <th class="region border border-gray-500 p-2 text-3xl">
                 <%!-- <img src={"https://fly.io/ui/images/#{k}.svg"} /> --%>
-                <%= get_flag(k) %> &nbsp <%= k %>
+                <%= Flags.get_flag(k) %> &nbsp <%= k %>
               </th>
               <td class="border border-gray-500 p-2"><%= v %></td>
               <td class="border border-gray-500 p-2"><%= Map.get(@counts, to_string(k), 0) %></td>

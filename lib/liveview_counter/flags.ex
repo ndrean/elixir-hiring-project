@@ -64,4 +64,20 @@ defmodule LiveviewCounter.Flags do
     @centers
     |> Enum.map(fn location -> %{location | country: @flags[location.country]} end)
   end
+
+  def get_location_detail(region) do
+    assign()
+    |> Enum.find(&(&1.short == region))
+  end
+
+  def get_flag(region) do
+    case get_location_detail(region) do
+      nil -> nil
+      %{} = detail -> Map.get(detail, :country, nil)
+    end
+  end
+
+  def show_city(region), do: Map.get(get_location_detail(region), :city, "unknown")
+
+  def show_flag(region), do: Map.get(get_location_detail(region), :country, "unknwow")
 end
