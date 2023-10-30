@@ -18,10 +18,10 @@ DATABASE_PATH = "/data/mydata/liveview_counter_prod.db"
 DNS_CLUSTER_QUERY = "liveview-counter.internal"
 PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
-PRIMARY_REGION = "cdg"
+# PRIMARY_REGION = "cdg"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 
-[[mounts]]
+[mounts]
 source = "mydata"
 destination = "/data"
 
