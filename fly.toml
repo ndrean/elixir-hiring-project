@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for distributed-counters on 2023-10-30T14:53:29+01:00
+# fly.toml app configuration file generated for distributed-counters on 2023-10-30T15:29:16+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -14,11 +14,10 @@ swap_size_mb = 512
 #   release_command = "/app/bin/migrate"
 
 [env]
-DATABASE_PATH = "/data/myapp/liveview_counter_prod.db"
 PHX_HOST = "distributed-counters.fly.dev"
+PORT = "8080"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
-# PORT = "8080"
-
+DATABASE_PATH = "/data/myapp/liveview_couner_prod.db"
 
 [http_service]
 internal_port = 8080
