@@ -24,7 +24,7 @@ exit-on-error: true
 # for applications that use a single SQLite database.
 proxy:
   # matches the internal_port in fly.toml
-  addr: ":4000"
+  addr: ":8080"
   target: "localhost:8081"
   #  SQLite database filename
   db: "liveview_counter_prod.db"

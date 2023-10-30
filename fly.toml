@@ -20,7 +20,7 @@ PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 
-[[mounts]]
+[mounts]
 source = "mydata"
 destination = "/data"
 
