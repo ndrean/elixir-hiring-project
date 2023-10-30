@@ -14,7 +14,7 @@ swap_size_mb = 512
 #   release_command = "/app/bin/migrate"
 
 [env]
-DATABASE_PATH = "/data/myapp/my_app_prod.db"
+DATABASE_PATH = "/data/myapp/liveview_counter_prod.db"
 PHX_HOST = "distributed-counters.fly.dev"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 # PORT = "8080"
