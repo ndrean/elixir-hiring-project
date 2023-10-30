@@ -25,6 +25,7 @@ exit-on-error: true
 proxy:
   # matches the internal_port in fly.toml
   addr: ":8080"
+  # Phoenix is listening on port 4000, set in fly.toml under PORT
   target: "localhost:4000"
   #  SQLite database filename
   db: "liveview_counter_prod.db"
