@@ -15,6 +15,7 @@ swap_size_mb = 512
 
 [env]
 PHX_HOST = "distributed-counters.fly.dev"
+DNS_CLUSTER_QUERY = "distributed-counters.internal"
 # PORT = "8080"
 
 
