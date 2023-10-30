@@ -12,7 +12,7 @@ fuse:
 # However, this data should not be accessed directly by the user application.
 data:
   # path to internal data storage
-  dir: "/data/mydata"
+  dir: "/data/litefs"
 
 # This flag ensure that LiteFS continues to run if there is an issue on starup.
 # It makes it easy to ssh in and debug any issues you might be having rather
