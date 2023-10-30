@@ -5,7 +5,7 @@
 fuse:
   # This is the mount directory that applications will
   # use to access their SQLite databases.
-  dir: "/app/data/mydata"
+  dir: "/data/mydata"
 
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
