@@ -13,7 +13,7 @@ swap_size_mb = 512
 # [deploy]
 #   release_command = "/app/bin/migrate"
 
-[MOUNT]
+[mounts]
 source = "mydata"
 destination = "/data"
 
