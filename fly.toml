@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for distributed-counters on 2023-10-30T13:54:54+01:00
+# fly.toml app configuration file generated for distributed-counters on 2023-10-30T14:47:39+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -21,7 +21,7 @@ PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
 
-[mounts]
+[[mounts]]
 source = "mydata"
 destination = "/data"
 
