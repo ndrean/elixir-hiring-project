@@ -193,8 +193,7 @@ defmodule LiveviewCounterWeb.Counter do
         +
       </button>
       <div class="mt-4">
-        Connected to Fly.io region "<strong class="font-bold"><%= @region || "unknown" %></strong>"",
-        &nbsp <%= Flags.show_city(@region) %> &nbsp <%= Flags.show_flag(@region) %>
+        Connected to <%= Flags.show_city(@region) %> &nbsp <%= Flags.show_flag(@region) %>
       </div>
       <table class="w-full mt-4 border-collapse border border-gray-500">
         <tr>
