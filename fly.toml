@@ -14,8 +14,10 @@ swap_size_mb = 512
 # release_command = "/app/bin/migrate"
 
 [env]
+#  the [mounts] configuration source is the name of the volume AND the name of a directory. 
+#  The directory will be mounted under the destination path.
 DATABASE_PATH = "/data/mydata/liveview_counter_prod.db"
-DNS_CLUSTER_QUERY = "distributed-counters.internal"
+DNS_CLUSTER_QUERY = "liveview_counter.internal"
 PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
 RELEASE_COOKIE = "4vB0A5bYymxG_f4P-EOLFRJ7CTpH7GkLsXFwDHRcHSRFLFFxcGh1mg=="
