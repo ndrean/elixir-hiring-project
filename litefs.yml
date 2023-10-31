@@ -29,7 +29,7 @@ proxy:
   # Specifies the bind address of the proxy server.
   addr: ":8080"
   # The hostport of the target application. If blank, proxy is disabled.
-  target: "localhost:8081"
+  target: "localhost:4000"
   #  SQLite database filename
   db: "liveview_counter_prod.db"
   # If true, enables verbose logging of requests by the proxy.
@@ -47,7 +47,7 @@ proxy:
 # the last command to be long-running (e.g. an application server). When the
 # last command exits, LiteFS is shut down.
 exec:
-  - cmd: "/app/bin/server -addr :8081 -dsn /mnt/mydata"  
+  - cmd: "/app/bin/server -addr :4000 -dsn /mnt/mydata"  
   # -addr :4000 -dsn /data/mydata"
 
 # The lease section specifies how the cluster will be managed. We're using the
