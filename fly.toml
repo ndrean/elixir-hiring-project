@@ -12,15 +12,19 @@ swap_size_mb = 512
 
 
 [env]
-DATABASE_PATH = "/data/myapp/liveview_couner_prod.db"
+# DATABASE_PATH = "/data/myapp/liveview_counter_prod.db"
+DATABASE_PATH = "/mnt/mydata/liveview_counter_prod.db"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 PHX_HOST = "distributed-counters.fly.dev"
 PORT = "8080"
 PRIMARY_REGION = "cdg"
 
 [mounts]
+# source = "mydata"
+# destination = "/data/mydata"
 source = "mydata"
-destination = "/data/mydata"
+destination = "/mnt"
+processes = ["app"]
 
 [http_service]
 internal_port = 8080

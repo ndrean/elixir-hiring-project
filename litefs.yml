@@ -5,7 +5,8 @@
 fuse:
   # This is the mount directory that applications will
   # use to access their SQLite databases.
-  dir: "/data/mydata"
+  # dir: "/data/mydata"
+  dir: "/mnt/db"
 
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
@@ -13,7 +14,8 @@ fuse:
 # # You must place this directory on a persistent volume.
 data:
   # path to internal data storage, placed on a persistent volume => fly volumes create litefs
-  dir: "/data/litefs"
+  # dir: "/data/litefs"
+  dir: "/mnt/litefs"
 
 # This flag ensure that LiteFS continues to run if there is an issue on starup.
 # It makes it easy to ssh in and debug any issues you might be having rather
@@ -26,10 +28,15 @@ exit-on-error: false
 proxy:
   # Specifies the bind address of the proxy server.
   addr: ":8080"
-  # Phoenix is listening on port 4000, set in fly.toml under PORT
+  # The hostport of the target application. If blank, proxy is disabled.
   target: "localhost:4000"
   #  SQLite database filename
   db: "liveview_counter_prod.db"
+  # If true, enables verbose logging of requests by the proxy.
+  debug: false
+  # List of paths that are ignored by the proxy. The asterisk is
+  # the only available wildcard. These requests are passed
+  # through to the target as-is.
   passthrough: 
     - "*.ico"
     - "*.png"
@@ -49,10 +56,20 @@ exec:
 # These environment variables will be available in your Fly.io application.
 lease:
   type: "consul"
+  # The API URL that other nodes will use to connect to this node.
   advertise-url: "http://${HOSTNAME}.vm.${FLY_APP_NAME}.internal:20202"
+  # Specifies if this node can become primary. The expression below evaluates
+  # to true on nodes that are run in the primary region. Nodes in other regions
+  # act as non-candidate, read-only replicas.
   candidate: ${FLY_REGION == PRIMARY_REGION}
+  # If true, then the node will automatically become primary after it has
+  # connected with the cluster and sync'd up. This makes it easier to run
+  # migrations on start up.
   promote: true
 
   consul:
+    # The URL of the Consul cluster.
     url: "${FLY_CONSUL_URL}"
+     # A unique key shared by all nodes in the LiteFS cluster.
+    # Change this if you are running multiple clusters in a single app!
     key: "litefs/${FLY_APP_NAME}"
