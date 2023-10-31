@@ -6,7 +6,7 @@ fuse:
   # This is the mount directory that applications will
   # use to access their SQLite databases.
   # dir: "/data/mydata"
-  dir: "/mnt/db"
+  dir: "/mnt/mydata"
 
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
@@ -29,7 +29,7 @@ proxy:
   # Specifies the bind address of the proxy server.
   addr: ":8080"
   # The hostport of the target application. If blank, proxy is disabled.
-  target: "localhost:4000"
+  target: "localhost:8080"
   #  SQLite database filename
   db: "liveview_counter_prod.db"
   # If true, enables verbose logging of requests by the proxy.
@@ -47,7 +47,7 @@ proxy:
 # the last command to be long-running (e.g. an application server). When the
 # last command exits, LiteFS is shut down.
 exec:
-  - cmd: "/app/bin/server"  
+  - cmd: "/app/bin/server -addr :8080"  
   # -addr :4000 -dsn /data/mydata"
 
 # The lease section specifies how the cluster will be managed. We're using the
