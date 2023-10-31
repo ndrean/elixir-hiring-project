@@ -51,7 +51,6 @@ defmodule LiveviewCounter.Count do
   end
 
   def init(_) do
-    primary_node() |> dbg()
     start_count = Counter.find_count(fly_region())
     {:ok, start_count}
   end

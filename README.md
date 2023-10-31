@@ -4,6 +4,10 @@
 
 Generated a new project since the "official" one used webpack.
 
+Locally, use `libcluster` and `dns_cluster` on Fly.io.
+
+To **deploy** this on Fly.io, a central SQLite is used on a node labelled "PRIMARY_REGION" where every write/read is made.
+
 Project achieved in 7h.
 
 Usage:
@@ -20,6 +24,8 @@ PORT=4001 FLY_REGION=cdg iex --sname "b" --cookie secret -S mix phx.server
 
 An SQLITE DB for persistence with a unique table COUNTER, with two records: `region`, `count`.
 
+For the deployment, a primary node is defined where every write/read is made. Done via `:erpc.call` (could not made `liteFS` work).
+
 Every change of the GenServer state is saved in the database.
 
 On mount, the socket state is populated by reading the DB and broadcasted to update users view.
@@ -28,15 +34,10 @@ On leave, the state is updated
 
 ## Fly.io
 
-Did you try using to distribute SQLite using `LiteFS`?
-
-<details><summary>My  attempt below. Lots of moving parts, so plenty of reasons to fail. Using LiteFS Cloud is next step.</summary>
-
 ```bash
 # stop when you have to deploy
 fly launch
 # remove release_command from fly.toml
-fly volumes create litefs --region cdg --size 1
 fly consul attach
 fly deploy
 ```
@@ -51,9 +52,11 @@ export RELEASE_NODE=$FLY_APP_NAME@$ip
 ```dockerfile
 #Dockerfile - Debian based.
 {RUNNER}
+apt-get install fuse
 RUN apt-get install ca-certificates fuse3...
 COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
 COPY litefs.yml /etc/litefs.yml
+
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/liveview_counter ./
 # USER nobody
 ENV ECTO_IPV6 true
@@ -69,7 +72,7 @@ def start(_type, _args) do
 
 ```elixir
 #config/runtime.exs
-  config :lmy_app, dns_cluster_query: System.get_env("DNS_CLUSTER_QUERY")
+  config :my_app, dns_cluster_query: System.get_env("DNS_CLUSTER_QUERY")
 ```
 
 ```yml
@@ -83,7 +86,7 @@ data:
   dir: "/data/litefs"
 
 proxy:
-  addr: ":4000"
+  addr: ":8081"
   target: "localhost:8080"
   #  SQLite database filename
   db: "my_app_prod.db"
@@ -121,8 +124,6 @@ DATABASE_PATH="/data/mydata/my_app_prod.db"
 PORT="8080"
 ```
 
-</details>
-
 ```bash
 > fly ssh console -s -C df
 Connecting to fdaa:0:57e6:a7b:aebf:700a:d1cb:2... complete
@@ -134,8 +135,6 @@ tmpfs             111340      0    111340   0% /sys/fs/cgroup
 /dev/vdb         1009132     40    940484   1% /data
 litefs           1009132     40    940484   1% /data/mydat
 ```
-
-LFSC6D7E31F282B89892
 
 ```bash
 >fly status
