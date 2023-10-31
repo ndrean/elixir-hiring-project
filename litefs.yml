@@ -7,7 +7,7 @@ fuse:
   # use to access their SQLite databases.
   # dir: "/data/mydata"
   # dir: "/mnt/mydata"
-  dir: "/litefs"
+  dir: "/mnt/litefs"
 
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
