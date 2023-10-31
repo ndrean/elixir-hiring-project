@@ -77,9 +77,9 @@ lease:
     # Change this if you are running multiple clusters in a single app!
     key: "litefs/${FLY_APP_NAME}"
   
-  tracing:
-    # Toggles tracing if 'path' is also set. Defaults to true.
-    enabled: true
+  # tracing:
+  #   # Toggles tracing if 'path' is also set. Defaults to true.
+  #   enabled: true
 
-    # Output path on disk.
-    path: "/var/log/lifefs/trace.log"
+  #   # Output path on disk.
+  #   path: "/var/log/lifefs/trace.log"
