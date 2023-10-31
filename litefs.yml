@@ -33,7 +33,7 @@ proxy:
   #  SQLite database filename
   db: "liveview_counter_prod.db"
   # If true, enables verbose logging of requests by the proxy.
-  debug: false
+  debug: true
   # List of paths that are ignored by the proxy. The asterisk is
   # the only available wildcard. These requests are passed
   # through to the target as-is.
