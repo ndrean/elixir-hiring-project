@@ -15,17 +15,23 @@ defmodule Counter do
   end
 
   def update(region, change) do
+    binding() |> dbg()
+
     case Repo.get_by(Counter, region: region) do
       nil ->
-        Repo.insert!(%Counter{region: region, count: 1})
+        %Counter{}
+        |> Counter.changeset(%{region: region, count: 1})
+        |> Repo.insert!()
 
       exists ->
-        Counter.changeset(exists, %{count: exists.count + change})
+        exists
+        |> Counter.changeset(%{count: exists.count + change})
         |> Repo.update!()
     end
+    |> dbg()
   end
 
-  def find(region) do
+  def find_count(region) do
     case Repo.get_by(Counter, region: region) do
       nil -> 0
       counter -> counter.count

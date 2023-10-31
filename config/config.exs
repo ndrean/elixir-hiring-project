@@ -11,7 +11,6 @@ config :liveview_counter,
   ecto_repos: [Counter.Repo]
 
 config :liveview_counter, Counter.Repo,
-  # database: "liveview_counter_repo",
   database: Path.expand("../liveview_counter_dev.db", Path.dirname(__ENV__.file)),
   pool_size: 5,
   show_sensitive_data_on_connection_error: true

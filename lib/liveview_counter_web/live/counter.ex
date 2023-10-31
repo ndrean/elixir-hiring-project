@@ -48,14 +48,15 @@ defmodule LiveviewCounterWeb.Counter do
 
   def fly_region do
     # mandatory ENV VAR. Raise on mount if not present
-    System.fetch_env!("FLY_REGION")
+    Count.fly_region()
+    # System.fetch_env!("FLY_REGION")
   end
 
   def init_state do
     list = Presence.list(@presence_topic)
     present = presence_by_region(list, nil)
     init_c = init_counts_by_region(present)
-    init_tot = Counter.total_count()
+    init_tot = Count.total_count()
     # signal to other users
     :ok = PubSub.broadcast(LiveviewCounter.PubSub, @init, init_c)
     {present, init_c, init_tot, 0}
@@ -77,6 +78,7 @@ defmodule LiveviewCounterWeb.Counter do
 
   # msg sent from the GenServer Counter
   def handle_info({:count, count, :region, region}, socket) do
+    IO.puts("broadcast--------------#{inspect({count, region})}")
     %{assigns: %{counts: counts}} = socket
     new_counts = Map.put(counts, region, count)
 
@@ -133,7 +135,7 @@ defmodule LiveviewCounterWeb.Counter do
 
     Enum.zip(
       displayed_locations,
-      Enum.map(displayed_locations, &Counter.find(&1))
+      Enum.map(displayed_locations, &Count.find_count(&1))
     )
     |> Enum.into(%{})
   end
@@ -179,6 +181,7 @@ defmodule LiveviewCounterWeb.Counter do
       </h1>
       <h2 class="mb-4">Online users: <strong><%= @nb_online %></strong></h2>
       <hr />
+      <p><%= inspect(Node.list()) %></p>
       <br />
       <button
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -216,7 +219,7 @@ defmodule LiveviewCounterWeb.Counter do
       </table>
     </div>
     <br />
-    <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
+    <%!-- <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> --%>
     """
   end
 end
