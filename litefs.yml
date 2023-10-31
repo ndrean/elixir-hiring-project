@@ -49,7 +49,7 @@ proxy:
 # the last command to be long-running (e.g. an application server). When the
 # last command exits, LiteFS is shut down.
 exec:
-  - cmd: "/app/bin/server -addr :8080 -dsn /mnt/mydata"  
+  - cmd: "/app/bin/server -addr :8080 -dsn /mnt/litefs"  
   # -addr :4000 -dsn /data/mydata"
 
 # The lease section specifies how the cluster will be managed. We're using the
