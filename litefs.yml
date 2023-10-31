@@ -7,7 +7,7 @@ fuse:
   # use to access their SQLite databases.
   # dir: "/data/mydata"
   # dir: "/mnt/mydata"
-  dir: "/litefs"
+  dir: "/data/litefs"
 
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
@@ -49,7 +49,7 @@ proxy:
 # the last command to be long-running (e.g. an application server). When the
 # last command exits, LiteFS is shut down.
 exec:
-  - cmd: "/app/bin/server -addr :8080 -dsn /mnt/litefs"  
+  - cmd: "/app/bin/server -addr :8080 -dsn /data/litefs"  
   # -addr :4000 -dsn /data/mydata"
 
 # The lease section specifies how the cluster will be managed. We're using the
