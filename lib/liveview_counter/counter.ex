@@ -69,23 +69,21 @@ defmodule LiveviewCounter.Count do
 
   def handle_call({:find_count, region}, _from, count) do
     # c = Counter.find_count(region)
-    c = :erpc.call(primary_node(), fn -> Counter.find_count(region) end)
+    c = :erpc.call(primary_node(), fn -> Counter.find_count(region) end) |> dbg()
     {:reply, c, count}
   end
 
   def handle_call(:total, _from, count) do
     # t = Counter.total_count()
-    primary_node() |> dbg()
-    t = :erpc.call(primary_node(), &Counter.total_count/0)
+    t = :erpc.call(primary_node(), &Counter.total_count/0) |> dbg()
     {:reply, t, count}
   end
 
   defp make_change(count, change) when is_integer(count) and is_integer(change) do
     new_count = count + change
     # Counter.update(fly_region(), change)
-    primary_node() |> dbg()
     region = fly_region()
-    :erpc.call(primary_node(), fn -> Counter.update(region, change) end)
+    :erpc.call(primary_node(), fn -> Counter.update(region, change) end) |> dbg()
     :ok = PubSub.broadcast(LiveviewCounter.PubSub, topic(), {:count, new_count, :region, region})
     {:reply, new_count, new_count}
   end

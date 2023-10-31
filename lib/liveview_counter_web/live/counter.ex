@@ -34,6 +34,8 @@ defmodule LiveviewCounterWeb.Counter do
         false -> {%{}, %{}, 0, 0}
       end
 
+    init_counts |> dbg()
+
     {:ok,
      socket
      |> assign(
@@ -219,7 +221,7 @@ defmodule LiveviewCounterWeb.Counter do
       </table>
     </div>
     <br />
-    <%!-- <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> --%>
+    <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
     """
   end
 end

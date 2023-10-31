@@ -15,8 +15,6 @@ defmodule Counter do
   end
 
   def update(region, change) do
-    binding() |> dbg()
-
     case Repo.get_by(Counter, region: region) do
       nil ->
         %Counter{}
@@ -28,7 +26,6 @@ defmodule Counter do
         |> Counter.changeset(%{count: exists.count + change})
         |> Repo.update!()
     end
-    |> dbg()
   end
 
   def find_count(region) do
