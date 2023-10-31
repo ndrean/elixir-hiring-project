@@ -27,9 +27,9 @@ exit-on-error: false
 # for applications that use a single SQLite database.
 proxy:
   # Specifies the bind address of the proxy server.
-  addr: ":8081"
+  addr: ":8080"
   # The hostport of the target application. If blank, proxy is disabled.
-  target: "localhost:8080"
+  target: "localhost:4000"
   #  SQLite database filename
   db: "liveview_counter_prod.db"
   # If true, enables verbose logging of requests by the proxy.
