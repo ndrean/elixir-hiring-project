@@ -2,7 +2,7 @@ defmodule Counter.Repo.Migrations.CreateCounter do
   use Ecto.Migration
 
   def change do
-    create table(:counters) do
+    create_if_nots_exists table(:counters) do
       add :count, :integer
       add :region, :string
 

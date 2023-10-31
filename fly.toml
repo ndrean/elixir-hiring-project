@@ -22,7 +22,7 @@ PRIMARY_REGION = "cdg"
 
 [mounts]
 source = "mydata"
-destination = "/mnt"
+destination = "/mnt/mydata"
 processes = ["app"]
 
 [http_service]

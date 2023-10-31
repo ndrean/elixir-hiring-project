@@ -44,4 +44,6 @@ erl_crash.dump
 /priv/static/assets/
 /priv/static/cache_manifest.json
 liveview_counter_*.*
+*.db
+*.db-*
 

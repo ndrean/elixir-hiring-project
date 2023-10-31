@@ -37,5 +37,6 @@ npm-debug.log
 /assets/vendor/
 
 liveview_counter_dev*.*
-liveview_counter_repo*.*
+liveview_counter_repo*
 *.db
+*.db-*
