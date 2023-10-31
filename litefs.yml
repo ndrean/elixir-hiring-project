@@ -6,7 +6,8 @@ fuse:
   # This is the mount directory that applications will
   # use to access their SQLite databases.
   # dir: "/data/mydata"
-  dir: "/mnt/mydata"
+  # dir: "/mnt/mydata"
+  dir: "/litefs"
 
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
@@ -15,7 +16,8 @@ fuse:
 data:
   # path to internal data storage, placed on a persistent volume => fly volumes create litefs
   # dir: "/data/litefs"
-  dir: "/mnt/litefs"
+  # dir: "/mnt/litefs"
+  dir: "/var/lib/litefs"
 
 # This flag ensure that LiteFS continues to run if there is an issue on starup.
 # It makes it easy to ssh in and debug any issues you might be having rather
@@ -66,6 +68,7 @@ lease:
   # connected with the cluster and sync'd up. This makes it easier to run
   # migrations on start up.
   promote: true
+  hostname: "primary"
 
   consul:
     # The URL of the Consul cluster.
@@ -73,3 +76,10 @@ lease:
      # A unique key shared by all nodes in the LiteFS cluster.
     # Change this if you are running multiple clusters in a single app!
     key: "litefs/${FLY_APP_NAME}"
+  
+  tracing:
+    # Toggles tracing if 'path' is also set. Defaults to true.
+    enabled: true
+
+    # Output path on disk.
+    path: "/var/log/lifefs/trace.log"

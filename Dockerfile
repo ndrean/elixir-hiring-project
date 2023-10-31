@@ -87,8 +87,8 @@ RUN chown nobody /app
 ENV MIX_ENV="prod"
 
 # Only copy the final release from the build stage
-# COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
-# COPY litefs.yml /etc/litefs.yml
+COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
+ADD litefs.yml /etc/litefs.yml
 
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/liveview_counter ./
 
