@@ -34,8 +34,6 @@ defmodule LiveviewCounterWeb.Counter do
         false -> {%{}, %{}, 0, 0}
       end
 
-    init_counts |> dbg()
-
     {:ok,
      socket
      |> assign(
@@ -80,7 +78,6 @@ defmodule LiveviewCounterWeb.Counter do
 
   # msg sent from the GenServer Counter
   def handle_info({:count, count, :region, region}, socket) do
-    IO.puts("broadcast--------------#{inspect({count, region})}")
     %{assigns: %{counts: counts}} = socket
     new_counts = Map.put(counts, region, count)
 
@@ -183,7 +180,6 @@ defmodule LiveviewCounterWeb.Counter do
       </h1>
       <h2 class="mb-4">Online users: <strong><%= @nb_online %></strong></h2>
       <hr />
-      <p><%= inspect(Node.list()) %></p>
       <br />
       <button
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

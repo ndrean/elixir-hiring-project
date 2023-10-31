@@ -52,6 +52,7 @@ defmodule LiveviewCounter.Count do
 
   def init(_) do
     start_count = Counter.find_count(fly_region())
+    primary_node() |> dbg()
     {:ok, start_count}
   end
 
@@ -69,13 +70,13 @@ defmodule LiveviewCounter.Count do
 
   def handle_call({:find_count, region}, _from, count) do
     # c = Counter.find_count(region)
-    c = :erpc.call(primary_node(), fn -> Counter.find_count(region) end) |> dbg()
+    c = :erpc.call(primary_node(), fn -> Counter.find_count(region) end)
     {:reply, c, count}
   end
 
   def handle_call(:total, _from, count) do
     # t = Counter.total_count()
-    t = :erpc.call(primary_node(), &Counter.total_count/0) |> dbg()
+    t = :erpc.call(primary_node(), &Counter.total_count/0)
     {:reply, t, count}
   end
 
@@ -83,7 +84,7 @@ defmodule LiveviewCounter.Count do
     new_count = count + change
     # Counter.update(fly_region(), change)
     region = fly_region()
-    :erpc.call(primary_node(), fn -> Counter.update(region, change) end) |> dbg()
+    :erpc.call(primary_node(), fn -> Counter.update(region, change) end)
     :ok = PubSub.broadcast(LiveviewCounter.PubSub, topic(), {:count, new_count, :region, region})
     {:reply, new_count, new_count}
   end
