@@ -7,7 +7,7 @@ fuse:
   # use to access their SQLite databases.
   # dir: "/data/mydata"
   # dir: "/mnt/mydata"
-  dir: "/mnt/litefs"
+  dir: "/litefs"
 
 # The data section describes settings for the internal LiteFS storage. We'll 
 # mount a volume to the data directory so it can be persisted across restarts.
@@ -17,7 +17,7 @@ data:
   # path to internal data storage, placed on a persistent volume => fly volumes create litefs
   # dir: "/data/litefs"
   # dir: "/mnt/litefs"
-  dir: "/var/lib/litefs"
+  dir: "/data/litefs"
 
 # This flag ensure that LiteFS continues to run if there is an issue on starup.
 # It makes it easy to ssh in and debug any issues you might be having rather
@@ -33,7 +33,7 @@ proxy:
   # The hostport of the target application. If blank, proxy is disabled.
   target: "localhost:8080"
   #  SQLite database filename
-  db: "liveview_counter_prod.db"
+  db: "counters.db"
   # If true, enables verbose logging of requests by the proxy.
   debug: true
   # List of paths that are ignored by the proxy. The asterisk is

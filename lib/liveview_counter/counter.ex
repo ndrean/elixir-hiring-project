@@ -7,9 +7,9 @@ defmodule LiveviewCounter.Count do
 
   # @start_value 0
 
-  def fly_region, do: System.fetch_env!("FLY_REGION")
+  def fly_region, do: System.get_env("FLY_REGION", "unknown")
 
-  def primary_region, do: System.fetch_env!("PRIMARY_REGION")
+  def primary_region, do: System.get_env("PRIMARY_REGION", "unknown")
 
   def topic, do: "count"
 
