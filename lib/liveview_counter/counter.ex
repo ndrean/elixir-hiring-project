@@ -52,40 +52,40 @@ defmodule LiveviewCounter.Count do
 
   def init(_) do
     start_count = Counter.find_count(fly_region())
-    primary_node() |> dbg()
-    {:ok, start_count}
+    p_node = primary_node() |> dbg()
+    {:ok, {start_count, p_node}}
   end
 
-  def handle_call(:current, _from, count) do
-    {:reply, count, count}
+  def handle_call(:current, _from, {count, p_node}) do
+    {:reply, count, {count, p_node}}
   end
 
-  def handle_call(:incr, _from, count) do
-    make_change(count, +1)
+  def handle_call(:incr, _from, {count, p_node}) do
+    make_change(p_node, count, +1)
   end
 
-  def handle_call(:decr, _from, count) do
-    make_change(count, -1)
+  def handle_call(:decr, _from, {count, p_node}) do
+    make_change(p_node, count, -1)
   end
 
-  def handle_call({:find_count, region}, _from, count) do
+  def handle_call({:find_count, region}, _from, {count, p_node}) do
     # c = Counter.find_count(region)
-    c = :erpc.call(primary_node(), fn -> Counter.find_count(region) end)
-    {:reply, c, count}
+    c = :erpc.call(p_node, fn -> Counter.find_count(region) end)
+    {:reply, c, {count, p_node}}
   end
 
-  def handle_call(:total, _from, count) do
+  def handle_call(:total, _from, {count, p_node}) do
     # t = Counter.total_count()
-    t = :erpc.call(primary_node(), &Counter.total_count/0)
-    {:reply, t, count}
+    t = :erpc.call(p_node, &Counter.total_count/0)
+    {:reply, t, {count, p_node}}
   end
 
-  defp make_change(count, change) when is_integer(count) and is_integer(change) do
+  defp make_change(p_node, count, change) when is_integer(count) and is_integer(change) do
     new_count = count + change
     # Counter.update(fly_region(), change)
     region = fly_region()
-    :erpc.call(primary_node(), fn -> Counter.update(region, change) end)
+    :erpc.call(p_node, fn -> Counter.update(region, change) end)
     :ok = PubSub.broadcast(LiveviewCounter.PubSub, topic(), {:count, new_count, :region, region})
-    {:reply, new_count, new_count}
+    {:reply, new_count, {new_count, p_node}}
   end
 end
