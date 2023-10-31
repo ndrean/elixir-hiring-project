@@ -51,48 +51,40 @@ defmodule LiveviewCounter.Count do
   end
 
   def init(_) do
+    primary_node() |> dbg()
     start_count = Counter.find_count(fly_region())
-    p_node = primary_node() |> dbg()
-    {:ok, {start_count, p_node}}
+    {:ok, start_count}
   end
 
-  def handle_call(:current, _from, {count, p_node}) do
-    {:reply, count, {count, p_node}}
+  def handle_call(:current, _from, count) do
+    {:reply, count, count}
   end
 
-  def handle_call(:incr, _from, {count, p_node}) do
-    make_change(p_node, count, +1)
+  def handle_call(:incr, _from, count) do
+    make_change(count, +1)
   end
 
-  def handle_call(:decr, _from, {count, p_node}) do
-    make_change(p_node, count, -1)
+  def handle_call(:decr, _from, count) do
+    make_change(count, -1)
   end
 
-  def handle_call({:find_count, region}, _from, {count, p_node}) do
-    # c = Counter.find_count(region)
-    p_node |> dbg()
-    p1 = primary_node()
-    if p1 === p_node, do: true, else: false |> dbg()
-    c = :erpc.call(p1, fn -> Counter.find_count(region) end)
-    {:reply, c, {count, p_node}}
+  def handle_call({:find_count, region}, _from, count) do
+    c = :erpc.call(primary_node(), fn -> Counter.find_count(region) end)
+    {:reply, c, count}
   end
 
-  def handle_call(:total, _from, {count, p_node}) do
+  def handle_call(:total, _from, count) do
     # t = Counter.total_count()
-    p1 = primary_node()
-    if p1 === p_node, do: true, else: false |> dbg()
-    t = :erpc.call(p1, &Counter.total_count/0)
-    {:reply, t, {count, p_node}}
+
+    t = :erpc.call(primary_node(), &Counter.total_count/0)
+    {:reply, t, count}
   end
 
-  defp make_change(p_node, count, change) when is_integer(count) and is_integer(change) do
+  defp make_change(count, change) when is_integer(count) and is_integer(change) do
     new_count = count + change
-    # Counter.update(fly_region(), change)
     region = fly_region()
-    p1 = primary_node()
-    if p1 === p_node, do: true, else: false |> dbg()
-    :erpc.call(p1, fn -> Counter.update(region, change) end)
+    :erpc.call(primary_node(), fn -> Counter.update(region, change) end)
     :ok = PubSub.broadcast(LiveviewCounter.PubSub, topic(), {:count, new_count, :region, region})
-    {:reply, new_count, {new_count, p_node}}
+    {:reply, new_count, new_count}
   end
 end

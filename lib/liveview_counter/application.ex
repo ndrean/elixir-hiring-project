@@ -20,8 +20,8 @@ defmodule LiveviewCounter.Application do
       {DNSCluster, query: System.get_env("DNS_CLUSTER_QUERY") || :ignore},
       {Phoenix.PubSub, name: LiveviewCounter.PubSub},
       LiveviewCounterWeb.Endpoint,
-      LiveviewCounter.Count,
-      LiveviewCounter.Presence
+      LiveviewCounter.Presence,
+      LiveviewCounter.Count
     ]
 
     opts = [strategy: :one_for_one, name: LiveviewCounter.Supervisor]
