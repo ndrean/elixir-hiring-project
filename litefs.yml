@@ -27,7 +27,7 @@ exit-on-error: false
 # for applications that use a single SQLite database.
 proxy:
   # Specifies the bind address of the proxy server.
-  addr: ":8080"
+  addr: ":8081"
   # The hostport of the target application. If blank, proxy is disabled.
   target: "localhost:8080"
   #  SQLite database filename
