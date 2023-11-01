@@ -31,9 +31,6 @@ defmodule LiveviewCounterWeb.Counter do
     {present, init_counts, total, nb_online} =
       case connected?(socket) do
         true ->
-          {LiveviewCounter.Count.primary_node(), LiveviewCounter.Count.fly_region(), Node.self()}
-          |> dbg()
-
           init_state()
 
         false ->
@@ -48,7 +45,8 @@ defmodule LiveviewCounterWeb.Counter do
        present: present,
        region: fly_region(),
        tracker_id: tracker_id,
-       nb_online: nb_online
+       nb_online: nb_online,
+       primary: nil
      )}
   end
 
@@ -111,7 +109,9 @@ defmodule LiveviewCounterWeb.Counter do
     nb_online = online_users(new_present)
     counts = update_counts_on_leave(new_present, subtracts, socket.assigns.counts)
 
-    {:noreply, assign(socket, present: new_present, counts: counts, nb_online: nb_online)}
+    {:noreply,
+     socket
+     |> assign(present: new_present, counts: counts, nb_online: nb_online)}
   end
 
   # whenever a user mounts, he broadcasts new counts to update the view.
@@ -223,7 +223,7 @@ defmodule LiveviewCounterWeb.Counter do
       </table>
     </div>
     <br />
-    <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
+    <!-- <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> -->
     """
   end
 end

@@ -7,6 +7,8 @@ defmodule LiveviewCounter.Application do
   def start(_type, _args) do
     LiveviewCounter.Release.migrate()
 
+    :primary = :ets.new(:primary, [:named_table, :public])
+
     topologies = [
       epdm: [
         strategy: Cluster.Strategy.LocalEpmd
@@ -14,7 +16,7 @@ defmodule LiveviewCounter.Application do
     ]
 
     children = [
-      # {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},
+      {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},
       Counter.Repo,
       LiveviewCounterWeb.Telemetry,
       {DNSCluster, query: System.get_env("DNS_CLUSTER_QUERY") || :ignore},
