@@ -32,7 +32,11 @@ defmodule LiveviewCounter.Count do
   def sort_primary(list, fly_region, primary_region)
       when is_function(fly_region) and is_function(primary_region) do
     list
-    |> Enum.filter(fn node -> :erpc.call(node, fly_region.()) == primary_region.() end)
+    |> Enum.filter(fn node ->
+      :erpc.call(node, fn ->
+        fly_region.() == primary_region.()
+      end)
+    end)
     |> Enum.sort()
     |> List.first()
     |> dbg()
