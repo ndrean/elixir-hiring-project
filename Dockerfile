@@ -88,8 +88,8 @@ RUN chown nobody /app
 ENV MIX_ENV="prod"
 
 # Only copy the final release from the build stage
-COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
-COPY litefs.yml /etc/litefs.yml
+# COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
+# COPY litefs.yml /etc/litefs.yml
 
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/liveview_counter ./
 
@@ -98,6 +98,6 @@ COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/liveview_coun
 ENV ECTO_IPV6 true
 ENV ERL_AFLAGS "-proto_dist inet6_tcp"
 
-ENTRYPOINT litefs mount
+# ENTRYPOINT litefs mount
 
-# CMD ["/app/bin/server"]
+CMD ["/app/bin/server"]
