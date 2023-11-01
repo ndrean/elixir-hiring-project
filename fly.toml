@@ -17,8 +17,8 @@ swap_size_mb = 512
 DATABASE_PATH = "/data/litefs/counters.db"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 PHX_HOST = "distributed-counters.fly.dev"
-PORT = "${PORT}"
-PRIMARY_REGION = "${PRIMARY_REGION}"
+PORT = "8080"
+PRIMARY_REGION = "cdg"
 
 [mounts]
 source = "litefs"
