@@ -30,8 +30,14 @@ defmodule LiveviewCounterWeb.Counter do
     # hence a guard is needed in the template (if @counts...)
     {present, init_counts, total, nb_online} =
       case connected?(socket) do
-        true -> init_state()
-        false -> {%{}, %{}, 0, 0}
+        true ->
+          {LiveviewCounter.Count.primary_node(), LiveviewCounter.Count.fly_region(), Node.self()}
+          |> dbg()
+
+          init_state()
+
+        false ->
+          {%{}, %{}, 0, 0}
       end
 
     {:ok,
