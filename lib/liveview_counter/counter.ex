@@ -81,6 +81,7 @@ defmodule LiveviewCounter.Count do
 
   def handle_call({:find_count, region}, _from, count) do
     # c = Counter.find_count(region)
+    primary_node() |> dbg()
     c = :erpc.call(primary_node(), fn -> Counter.find_count(region) end)
     {:reply, c, count}
   end
