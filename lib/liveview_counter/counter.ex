@@ -19,11 +19,21 @@ defmodule LiveviewCounter.Count do
         Node.self()
 
       list ->
-        case Enum.find(list, fn node -> :erpc.call(node, &fly_region/0) == primary_region() end) do
+        case sort_primary(list, &fly_region/0, &primary_region/0) do
+          # case Enum.filter(list, fn node -> :erpc.call(node, &fly_region/0) == primary_region() end)
+          #      |> Enum.sort()
+          #      |> List.first() do
           nil -> Node.self()
           node -> node
         end
     end
+  end
+
+  def sort_primary(list, fly_region, primary_region) do
+    list
+    |> Enum.filter(fn node -> :erpc.call(node, fly_region.()) == primary_region.() end)
+    |> Enum.sort()
+    |> List.first()
   end
 
   def start_link(_opts) do
