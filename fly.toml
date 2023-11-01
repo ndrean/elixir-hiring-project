@@ -17,8 +17,8 @@ swap_size_mb = 512
 DATABASE_PATH = "/data/litefs/counters.db"
 DNS_CLUSTER_QUERY = "distributed-counters.internal"
 PHX_HOST = "distributed-counters.fly.dev"
-PORT = "8080"
-PRIMARY_REGION = "cdg"
+PORT = "${PORT}"
+PRIMARY_REGION = "${PRIMARY_REGION}"
 
 [mounts]
 source = "litefs"
@@ -26,7 +26,7 @@ destination = "/data"
 processes = ["app"]
 
 [http_service]
-internal_port = 8080
+internal_port = 8081
 force_https = true
 auto_stop_machines = true
 auto_start_machines = true
