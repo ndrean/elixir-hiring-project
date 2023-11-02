@@ -7,13 +7,11 @@ defmodule LiveviewCounter.Application do
   def start(_type, _args) do
     LiveviewCounter.Release.migrate()
 
-    # :primary = :ets.new(:primary, [:named_table, :public])
-
-    topologies = [
-      epdm: [
-        strategy: Cluster.Strategy.LocalEpmd
-      ]
-    ]
+    # topologies = [
+    #   epdm: [
+    #     strategy: Cluster.Strategy.LocalEpmd
+    #   ]
+    # ]
 
     children = [
       # {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},

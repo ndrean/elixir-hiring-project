@@ -12,20 +12,18 @@ defmodule LiveviewCounterWeb.Counter do
   @presence_topic "presence"
 
   def mount(_params, _session, socket) do
-    # ip = Map.get(get_connect_info(socket, :peer_data), :address, nil)
-
     :ok = PubSub.subscribe(LiveviewCounter.PubSub, @topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@presence_topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@init)
 
-    region = LiveviewCounter.Count.fly_region() |> dbg()
+    region = LiveviewCounter.Count.fly_region()
 
     # avoid unnecessary DB calls by doing this once the WS mounted,
     # hence a guard is needed in the template (if @counts...)
     {tracker_id, primary_node_name, present, init_counts, total, nb_online} =
       case connected?(socket) do
         true ->
-          LiveviewCounter.Count.start_link(region) |> dbg()
+          LiveviewCounter.Count.start_link(region)
           init_state(socket.id, region)
 
         false ->
@@ -46,9 +44,7 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   def fly_region do
-    # mandatory ENV VAR. Raise on mount if not present
     Count.fly_region()
-    # System.fetch_env!("FLY_REGION")
   end
 
   def get_primary_node_name(region, primary) when region == primary do
@@ -143,10 +139,6 @@ defmodule LiveviewCounterWeb.Counter do
      socket
      |> assign(present: new_present, counts: counts, nb_online: nb_online)}
   end
-
-  # whenever a user mounts, he broadcasts new counts to update the view.
-  # In case of large JSON, this should be improved.
-  # perhaps <https://github.com/Miserlou/live_json>?
 
   def handle_info(counts, socket) when is_map(counts) do
     {:noreply, assign(socket, counts: counts)}
