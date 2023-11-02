@@ -13,8 +13,8 @@ defmodule LiveviewCounter.Count do
 
   def topic, do: "count"
 
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, nil, name: @name)
+  def start_link(region) do
+    GenServer.start_link(__MODULE__, region, name: @name)
   end
 
   def incr(primary, region) do
@@ -37,8 +37,9 @@ defmodule LiveviewCounter.Count do
     GenServer.call(@name, {:total, primary})
   end
 
-  def init(_) do
-    {:ok, 0}
+  def init(region) do
+    c = Counter.find_count(region)
+    {:ok, c}
   end
 
   # def handle_call(:current, _from, count) do

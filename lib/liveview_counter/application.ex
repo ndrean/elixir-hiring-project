@@ -16,14 +16,13 @@ defmodule LiveviewCounter.Application do
     ]
 
     children = [
-      # {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},
+      {Cluster.Supervisor, [topologies, [name: LiveViewCounter.ClusterSupervisor]]},
       Counter.Repo,
       LiveviewCounterWeb.Telemetry,
       # {DNSCluster, query: System.get_env("DNS_CLUSTER_QUERY") || :ignore},
       {Phoenix.PubSub, name: LiveviewCounter.PubSub},
       LiveviewCounterWeb.Endpoint,
-      LiveviewCounter.Presence,
-      LiveviewCounter.Count
+      LiveviewCounter.Presence
     ]
 
     opts = [strategy: :one_for_one, name: LiveviewCounter.Supervisor]

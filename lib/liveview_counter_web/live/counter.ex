@@ -18,7 +18,7 @@ defmodule LiveviewCounterWeb.Counter do
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@presence_topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@init)
 
-    region = LiveviewCounter.Count.fly_region() |> dbg()
+    region = LiveviewCounter.Count.fly_region()
 
     # avoid unnecessary DB calls by doing this once the WS mounted,
     # hence a guard is needed in the template (if @counts...)
@@ -73,6 +73,7 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   def init_state(id, region) do
+    LiveviewCounter.Count.start_link(region)
     # capture the tracker_id to avoid double counting
 
     {:ok, tracker_id} =
@@ -165,7 +166,7 @@ defmodule LiveviewCounterWeb.Counter do
 
   # produce a list of maps %{region => total_clicks} by querying the DB
   def init_counts_by_region(primary, present) when is_map(present) do
-    displayed_locations = Map.keys(present) |> dbg()
+    displayed_locations = Map.keys(present)
 
     Enum.zip(
       displayed_locations,
@@ -253,7 +254,7 @@ defmodule LiveviewCounterWeb.Counter do
         <% end %>
       </table>
       <br />
-      <p>Latency:-- <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
+      <%!-- <p>Latency:-- <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> --%>
     </div>
     """
   end
