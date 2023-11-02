@@ -18,7 +18,7 @@ defmodule LiveviewCounterWeb.Counter do
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@presence_topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@init)
 
-    region = LiveviewCounter.Count.fly_region()
+    region = LiveviewCounter.Count.fly_region() |> dbg()
 
     # avoid unnecessary DB calls by doing this once the WS mounted,
     # hence a guard is needed in the template (if @counts...)
@@ -80,7 +80,7 @@ defmodule LiveviewCounterWeb.Counter do
         region: fly_region()
       })
 
-    primary = LiveviewCounter.Count.primary_region() |> dbg()
+    primary = LiveviewCounter.Count.primary_region()
 
     primary_node_name = get_primary_node_name(region, primary)
     list = Presence.list(@presence_topic)
