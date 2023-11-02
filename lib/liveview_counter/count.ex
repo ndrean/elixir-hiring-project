@@ -38,7 +38,7 @@ defmodule LiveviewCounter.Count do
   end
 
   def init(region) do
-    c = Counter.find_count(region)
+    c = Counter.find_count(region) |> dbg()
     {:ok, c}
   end
 
