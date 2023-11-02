@@ -28,7 +28,6 @@ defmodule LiveviewCounter.Count do
               node
           end
       end
-      |> dbg()
 
     true = :ets.insert(:primary, {:name, node})
     node

@@ -184,7 +184,7 @@ defmodule LiveviewCounterWeb.Counter do
       <h1 class="text-3xl font-bold mb-4">
         Total clicks: <%= total_clicks(@counts) %>
       </h1>
-      <h2 class="mb-4">Online users: <strong><%= @nb_online %></strong></h2>
+      <h2 class="mb-4 text-xl">Online users: <strong><%= @nb_online %></strong></h2>
       <hr />
       <br />
       <button
@@ -223,7 +223,7 @@ defmodule LiveviewCounterWeb.Counter do
       </table>
     </div>
     <br />
-    <!-- <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p> -->
+    <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
     """
   end
 end
