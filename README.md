@@ -155,4 +155,7 @@ shm               111340      0    111340   0% /dev/shm
 tmpfs             111340      0    111340   0% /sys/fs/cgroup
 /dev/vdb          997076     40    929044   1% /data
 litefs            997076     40    929044   1% /data/mydata
+
+
+>fly ssh console --pty -C "/app/bin/liveview_counter remote"
 ```

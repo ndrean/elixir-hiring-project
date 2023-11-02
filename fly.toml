@@ -22,7 +22,7 @@ PRIMARY_REGION = "${PRIMARY_REGION}"
 
 [mounts]
 source = "litefs"
-destination = "/data"
+destination = "/data/litefs"
 processes = ["app"]
 
 [http_service]

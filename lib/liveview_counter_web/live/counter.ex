@@ -1,5 +1,6 @@
 defmodule LiveviewCounterWeb.Counter do
   use Phoenix.LiveView
+  # use LiveviewCounterWeb, :live_view
 
   alias LiveviewCounter.Count
   alias Phoenix.PubSub
@@ -187,18 +188,20 @@ defmodule LiveviewCounterWeb.Counter do
       <h2 class="mb-4 text-xl">Online users: <strong><%= @nb_online %></strong></h2>
       <hr />
       <br />
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        phx-click="dec"
-      >
-        -
-      </button>
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-        phx-click="inc"
-      >
-        +
-      </button>
+      <div class="flex justify-center">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          phx-click="dec"
+        >
+          <Heroicons.LiveView.icon name="hand-thumb-down" type="outline" class="h-6 w-6" />
+        </button>
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+          phx-click="inc"
+        >
+          <Heroicons.LiveView.icon name="hand-thumb-up" type="outline" class="h-6 w-6" />
+        </button>
+      </div>
       <div class="mt-4">
         Connected to <%= Flags.show_city(@region) %> &nbsp <%= Flags.show_flag(@region) %>
       </div>
@@ -221,9 +224,9 @@ defmodule LiveviewCounterWeb.Counter do
           </tr>
         <% end %>
       </table>
+      <br />
+      <p>Latency:-- <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
     </div>
-    <br />
-    <p>Latency <span id="rtt" phx-hook="RTT" phx-update="ignore"></span></p>
     """
   end
 end
