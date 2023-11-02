@@ -18,24 +18,17 @@ defmodule LiveviewCounterWeb.Counter do
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@presence_topic)
     :ok = LiveviewCounterWeb.Endpoint.subscribe(@init)
 
-    # capture the tracker_id to avoid double counting
-    {:ok, tracker_id} =
-      if connected?(socket),
-        do:
-          Presence.track(self(), @presence_topic, socket.id, %{
-            region: fly_region()
-          }),
-        else: {:ok, nil}
+    region = LiveviewCounter.Count.fly_region()
 
     # avoid unnecessary DB calls by doing this once the WS mounted,
     # hence a guard is needed in the template (if @counts...)
-    {present, init_counts, total, nb_online} =
+    {tracker_id, primary_node_name, present, init_counts, total, nb_online} =
       case connected?(socket) do
         true ->
-          init_state()
+          init_state(socket.id, region)
 
         false ->
-          {%{}, %{}, 0, 0}
+          {nil, "", %{}, %{}, 0, 0}
       end
 
     {:ok,
@@ -44,10 +37,10 @@ defmodule LiveviewCounterWeb.Counter do
        total: total,
        counts: init_counts,
        present: present,
-       region: fly_region(),
+       region: region,
        tracker_id: tracker_id,
        nb_online: nb_online,
-       primary: nil
+       primary: primary_node_name
      )}
   end
 
@@ -57,24 +50,59 @@ defmodule LiveviewCounterWeb.Counter do
     # System.fetch_env!("FLY_REGION")
   end
 
-  def init_state do
+  def get_primary_node_name(region, primary) when region == primary do
+    Node.self()
+  end
+
+  def get_primary_node_name(region, primary) when region != primary do
+    case Node.list() do
+      [] ->
+        Process.sleep(1_000)
+        get_primary_node_name(region, primary)
+
+      list ->
+        list
+        |> Enum.filter(fn node ->
+          :erpc.call(node, fn ->
+            fly_region() == primary
+          end)
+        end)
+        |> Enum.sort()
+        |> List.first()
+    end
+  end
+
+  def init_state(id, region) do
+    # capture the tracker_id to avoid double counting
+
+    {:ok, tracker_id} =
+      Presence.track(self(), @presence_topic, id, %{
+        region: fly_region()
+      })
+
+    primary = LiveviewCounter.Count.primary_region() |> dbg()
+
+    primary_node_name = get_primary_node_name(region, primary)
     list = Presence.list(@presence_topic)
     present = presence_by_region(list, nil)
-    init_c = init_counts_by_region(present)
-    init_tot = Count.total_count()
+    init_c = init_counts_by_region(primary_node_name, present)
+    init_tot = Count.total_count(primary_node_name)
     # signal to other users
     :ok = PubSub.broadcast(LiveviewCounter.PubSub, @init, init_c)
-    {present, init_c, init_tot, 0}
+    {tracker_id, primary_node_name, present, init_c, init_tot, 0}
   end
 
-  def handle_event("inc", _, %{assigns: %{counts: counts}} = socket) do
-    c = Count.incr()
-    {:noreply, assign(socket, counts: Map.put(counts, fly_region(), c))}
+  @spec handle_event(<<_::24, _::_*8>>, any(), any()) :: {:noreply, any()} | {:reply, %{}, any()}
+  def handle_event("inc", _, socket) do
+    %{assigns: %{counts: counts, primary: primary, region: region}} = socket
+    c = Count.incr(primary, region)
+    {:noreply, assign(socket, counts: Map.put(counts, region, c))}
   end
 
-  def handle_event("dec", _, %{assigns: %{counts: counts}} = socket) do
-    c = Count.decr()
-    {:noreply, assign(socket, counts: Map.put(counts, fly_region(), c))}
+  def handle_event("dec", _, socket) do
+    %{assigns: %{counts: counts, primary: primary, region: region}} = socket
+    c = Count.decr(primary, region)
+    {:noreply, assign(socket, counts: Map.put(counts, region, c))}
   end
 
   def handle_event("ping", _, socket) do
@@ -136,12 +164,12 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   # produce a list of maps %{region => total_clicks} by querying the DB
-  def init_counts_by_region(present) when is_map(present) do
-    displayed_locations = Map.keys(present)
+  def init_counts_by_region(primary, present) when is_map(present) do
+    displayed_locations = Map.keys(present) |> dbg()
 
     Enum.zip(
       displayed_locations,
-      Enum.map(displayed_locations, &Count.find_count(&1))
+      Enum.map(displayed_locations, &Count.find_count(primary, &1))
     )
     |> Enum.into(%{})
   end
