@@ -25,6 +25,7 @@ defmodule LiveviewCounterWeb.Counter do
     {tracker_id, primary_node_name, present, init_counts, total, nb_online} =
       case connected?(socket) do
         true ->
+          LiveviewCounter.Count.start_link(region) |> dbg()
           init_state(socket.id, region)
 
         false ->
@@ -73,7 +74,6 @@ defmodule LiveviewCounterWeb.Counter do
   end
 
   def init_state(id, region) do
-    LiveviewCounter.Count.start_link(region) |> dbg()
     # capture the tracker_id to avoid double counting
 
     {:ok, tracker_id} =
