@@ -55,6 +55,7 @@ defmodule LiveviewCounterWeb.Counter do
       list ->
         list |> Enum.sort() |> List.first()
     end
+    |> dbg()
   end
 
   def get_primary_node_name(region, primary) when region != primary do
